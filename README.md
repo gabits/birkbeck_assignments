@@ -1,3 +1,2 @@
-# birkbeck_assignments
-Store past exercises from lab classes at Birkbeck.
-This is for personal use and does not aim to reach the general public.
+# PHP experiments
+A simple dockerised PHP application using ngnix to load files locally for experimentation and learning purposes.
