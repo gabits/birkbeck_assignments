@@ -1,0 +1,14 @@
+web:
+ image: nginx:stable
+ ports:
+  - "8080:80"
+ volumes:
+  - ./php-experiments:/php-experiments:ro
+  - ./site.conf:/etc/nginx/conf.d/site.conf:ro
+ links:
+  - php
+
+php:
+ image: php:7-fpm
+ volumes:
+  - ./php-experiments:/php-experiments:ro 
