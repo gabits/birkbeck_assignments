@@ -8,6 +8,5 @@
         <?php
             echo '<p>Hello World!</p>';
         ?>
-        <p>HTML5 template</p>
     </body>
 </html>
