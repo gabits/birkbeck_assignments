@@ -1,17 +1,11 @@
 <?php
+    require_once 'includes/functions.php';
+
     include 'includes/header.php';
     include 'includes/menu.php';
 
-    function multiply ($number_1, $number_2) {
-        $calculation = $number_1 * $number_2;
-        return $calculation;
-    }
-
-    function create_heading($string, $heading_level) {
-        return "<h$heading_level>$string</h$heading_level>";
-    }
-
-    $title = create_heading("Welcome", 2);
+    $title = "Welcome";
+    $title = create_heading($title, 2);
     echo $title;
 
     $calculation = multiply(34, 89);

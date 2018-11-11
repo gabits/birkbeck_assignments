@@ -1,17 +1,14 @@
 <?php
+    require_once 'includes/functions.php';
+
     include 'includes/header.php';
     include 'includes/menu.php';
 
     $title = 'tHe Last & fiNal crusade';
     $id = 'AN-454453';
 
-    function clean_and_display_title($title) {
-        $title = trim($title);
-        $title = ucwords(strtolower($title));
-        $title = htmlentities($title);
-        echo "<p>$title</p>";
-    }
-    clean_and_display_title($title);
+    $title = create_heading($title, 2);
+    echo $title;
 
     function check_if_id_is_valid ($id) {
         $irregular_separators = array('.', '/');
