@@ -2,7 +2,7 @@
     function multiply ($number_1, $number_2) {
         $calculation = $number_1 * $number_2;
         return $calculation;
-    }
+    };
 
     function create_heading($string, $heading_level) {
         $string = trim($string);
@@ -14,5 +14,13 @@
         }
         $string = htmlentities($string);
         return "<h$heading_level>$string</h$heading_level>";
-    }
+    };
+
+    function make_menu($menu) {
+        echo '<ul>';
+        foreach($menu as $file => $title) {
+            echo "<li><a href=$file>$title</a></li>";
+        };
+        echo '</ul>';
+    };
 ?>

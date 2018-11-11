@@ -1,10 +1,9 @@
 <div class="nav">
     <?php
+        require_once 'includes/functions.php';
+
         include 'includes/pages_list.php';
-        echo '<ul>';
-        foreach($menu as $file => $title) {
-            echo "<li><a href=$file>$title</a></li>";
-        }
-        echo '</ul>';
+
+        make_menu($menu);
     ?>
 </div>
