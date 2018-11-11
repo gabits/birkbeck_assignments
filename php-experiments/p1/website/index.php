@@ -1,14 +1,23 @@
 <?php
     include 'includes/header.php';
     include 'includes/menu.php';
-?>
 
-<h2>Welcome</h2>
-<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
-dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-mollit anim id est laborum.</p>
+    function multiply ($number_1, $number_2) {
+        $calculation = $number_1 * $number_2;
+        return $calculation;
+    }
+
+    function create_heading($string, $heading_level) {
+        return "<h$heading_level>$string</h$heading_level>";
+    }
+
+    $title = create_heading("Welcome", 2);
+    echo $title;
+
+    $calculation = multiply(34, 89);
+    echo "<p>$calculation<p>";
+    $calculation = multiply(57, 13);
+    echo "<p>$calculation<p>";
+?>
 
 <?php include 'includes/footer.php' ?>
