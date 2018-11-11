@@ -14,9 +14,9 @@
     echo "<p>$calculation<p>";
 
     $links = array(
-        'http://www.php.net/manual/en/index.php' => 'PHP Manual',
-        'http://moodle.bbk.ac.uk/' => 'Birkbeck Moodle',
-        'http://www.bbk.ac.uk/mybirkbeck/' => 'My Birkbeck',
+        'https://www.php.net/manual/en/index.php' => 'PHP Manual',
+        'https://moodle.bbk.ac.uk/' => 'Birkbeck Moodle',
+        'https://www.bbk.ac.uk/mybirkbeck/' => 'My Birkbeck',
     );
     make_menu($links);
 

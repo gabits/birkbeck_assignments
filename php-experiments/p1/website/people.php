@@ -7,13 +7,21 @@
     $title = "People";
     $title = create_heading($title, 2);
     echo $title;
-?>
 
-<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
-dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-mollit anim id est laborum.</p>
 
-<?php include 'includes/footer.php' ?>
+    $people = array();
+    $list_of_people = fopen('people.txt', 'r');
+    while (!feof($list_of_people)) {
+        $person_data = fgets($list_of_people);
+        $person_details = explode(':', $person_data);
+        // Append the details array to the main people array
+        $people[] = $person_details;
+    }
+    fclose($list_of_people);
+
+    foreach ($people as $person) {
+        echo "<p>$person[0] is $person[1], ";
+        echo "is $person[2] years old and is currently $person[3].</p>";
+    };
+
+include 'includes/footer.php' ?>
