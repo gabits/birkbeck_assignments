@@ -1,20 +1,22 @@
 <?php
 
 require 'files_processor.php';
-include 'functions.php'
+include 'functions.php';
 
 
-MODULE_CODES = array(
-    'PP' => 'Problem Solving for Programming',
-    'P1' => 'Web Programming using PHP',
-    'DT' => 'Introduction to Database Technology',
+define(
+    'MODULE_CODES',
+    array(
+        'PP' => 'Problem Solving for Programming',
+        'P1' => 'Web Programming using PHP',
+        'DT' => 'Introduction to Database Technology',
+    )
 );
 
-TERM_TYPES = array('T1', 'T2', 'T3');
+define('TERM_TYPES', array('T1', 'T2', 'T3'));
 
 
 function clean_trailing_whitespaces_in_data_array($data_array) {
-    //
     for ($index = 0; $index < count($array); $index++) {
         $data_array[$index] = trim($data_array[$index]);
     };
@@ -32,43 +34,47 @@ function get_module_header($module_header) {
     // Marked date: <dd/mm/yyyy>
 
     function validate_date($marked_date) {
-        $error = $marked_date . ":ERROR";
+        $error = $marked_date . " :ERROR";
 
         $date = explode("/", $marked_date);
-        $date = str_replace("/", "", $date);
 
-        $day = (int)$date[:2];
-        $month = (int)$date[2:4];
-        $year = (int)$date[4:8];
+        $day = $date[0];
+        $month = $date[1];
+        $year = $date[2];
 
-        if (strlen($date) != 8) {
-            $marked_date = $error;
-        } elseif ($day < 0 or $day > 31 or $month < 0 or $month > 12 or $year < 0) {
+        if ($day < 0 or $day > 31 or $month < 0 or $month > 12 or $year < 0) {
             $marked_date = $error;
         };
         return $marked_date;
     }
 
     function validate_module_title($module_title, $module_code) {
-        if (MODULE_CODES[$module_code][:2] != $module_title or $module_code[:-6] == ":ERROR") {
-            $module_title = $module_title . ":ERROR";
-            return $module_title;
+        $registered_module_code = substr(MODULE_CODES[$module_code], 0, 2);
+        $code_ending_str = substr($module_code, -1, -7);
+        if ($registered_module_code != $module_title or $code_ending_str == ":ERROR") {
+            $module_title = $module_title . " :ERROR";
         };
+        return $module_title;
     };
 
     function validate_module_code($module_code) {
-        $module_code = strtoupper($module_code);
-        $error = $module_code . ":ERROR";
         if (strlen($module_code) != 8) {
             // The module code does not have the expected size
             $module_code = $error;
-        } elseif (!array_key_exists($module_code[:2], MODULE_CODES)) {
+
+        $module_code = strtoupper($module_code);
+        $starting_module_code = substr($module_code, 0, 2);
+        $term_type = substr($module_code, -1, -3);
+        $module_year = substr($module_code, 2, 7);
+        $error = $module_code . " :ERROR";
+
+        if (!array_key_exists($starting_module_code, MODULE_CODES)) {
             // The module code is not registered
             $module_code = $error;
-        } elseif (!ctype_digit($module_code[2:7])) {
+        } elseif (!ctype_digit($module_year)) {
             // The 4 middle digits are not a year
             $module_code = $error;
-        } elseif (!in_array($module_code[:-2], TERM_TYPES)) {
+        } elseif (!in_array($term_type, TERM_TYPES)) {
             // The last two digitis are not term types
             $module_code = $error;
         };
@@ -81,7 +87,7 @@ function get_module_header($module_header) {
     $file_name = $headers[0];
     $module_code = validate_module_code($headers[1]);
     $module_title = validate_module_title($headers[2], $module_code);
-    $tutor = validate_module_tutot($headers[3]);
+    $tutor = validate_module_tutor($headers[3]);
     $marked_date = validate_marked_date($headers[4]);
 
     $validated_module_header = array(
@@ -92,7 +98,9 @@ function get_module_header($module_header) {
         'Marked date' => $marked_date,
     );
     return $validated_module_header;
+    };
 };
+
 
 
 function get_student_marks($file_body) {
@@ -108,27 +116,28 @@ function get_student_marks($file_body) {
         $student_id = $student_info[0];
         $mark = $student_info[1];
         $student_marks[$student_id] = $mark;
-    }
+    };
     return $student_marks;
 };
 
 
 function validate_student_marks($raw_student_marks) {
+    // Copy the data to a new array
+
+    $valid_student_marks = array();
     foreach ($raw_student_marks as $student_id => $mark) {
-        // Copy the data to a new array
-        $valid_student_marks = array();
-        if (strlen($student_id) != 8 or !ctype_digit($student_id)){
+        if (strlen($student_id) != 8 or !ctype_digit($student_id)) {
             // If the student ID is not composed of 8 digits or if they are not all numeric
-            $raw_student_marks[$student_id] => $mark . "Incorrect student ID: not included";
+            $raw_student_marks[$student_id] = $mark . "Incorrect student ID: not included";
         } elseif ((int)$mark < 0 or (int)$mark > 100 or !ctype_digit($mark)) {
             // If the mark is not between 0 and 100 or if it is not entirely numeric
-            $raw_student_marks[$student_id] => $mark . "Incorrect mark: not included";
+            $raw_student_marks[$student_id] = $mark . "Incorrect mark: not included";
         } else {
             // The student id and mark is correct so we can copy it to the array for valid data
-            $valid_student_marks[$student_id] => $mark;
-        }
-    return $valid_student_marks;
+            $valid_student_marks[$student_id] = $mark;
+        };
     };
+    return $valid_student_marks;
 };
 
 
@@ -146,8 +155,8 @@ function analyse_student_marks($valid_student_marks) {
         'Mode' => $mode,
         'Range' => $range,
         '# of students' => $number_of_students,
-    )
-    return $statistical_analysis
+    );
+    return $statistical_analysis;
 };
 
 
@@ -158,11 +167,11 @@ function calculate_grade_distribution($valid_student_marks) {
     $fail = 0;
 
     foreach ($valid_student_marks as $mark) {
-        if $mark >= 70 {
+        if ($mark >= 70) {
             $distinction++;
-        } elseif $mark >= 60 {
+        } elseif ($mark >= 60) {
             $merit++;
-        } elseif $mark >= 40 {
+        } elseif ($mark >= 40) {
             $pass++;
         } else {
             $fail++;
@@ -177,6 +186,6 @@ function calculate_grade_distribution($valid_student_marks) {
     );
 
     return $grade_distribution;
-}
+};
 
 ?>

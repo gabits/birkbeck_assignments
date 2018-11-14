@@ -38,7 +38,7 @@ function build_and_display_html_from_file($data_file) {
         echo "<p>";
         foreach ($array_data as $key => $value) {
             echo "<b>$key</b>: $value";
-        }
+        };
         echo "</p>";
     };
 
