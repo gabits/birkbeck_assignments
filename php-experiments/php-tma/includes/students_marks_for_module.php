@@ -105,6 +105,21 @@ function get_student_marks($file_body) {
 };
 
 
-function
+function validate_student_marks($raw_student_marks) {
+    foreach ($raw_student_marks as $student_id => $mark) {
+        if (strlen($student_id) != 8 or !ctype_digit($student_id)){
+            // If the student ID is not composed of 8 digits or if they are not all numeric
+            $raw_student_marks[$student_id] => $mark . "Incorrect student ID: not included";
+        } elseif ((int)$mark < 0 or (int)$mark > 100 or !ctype_digit($mark)) {
+            // If the mark is not between 0 and 100 or if it is not entirely numeric
+            $raw_student_marks[$student_id] => $mark . "Incorrect mark: not included";
+        };
+    };
+};
+
+
+function analyse_student_marks() {
+
+};
 
 ?>
