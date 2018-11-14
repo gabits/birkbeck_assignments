@@ -1,0 +1,116 @@
+<?php
+// Make comments.
+// Extend code, DRY
+// HTML must validate
+// Don't use deprecated PHP functions
+
+Step 0: Add test files
+    0.1. Add DTT1.txt with expected valid data
+    0.2. Add test.xml with dummy data
+
+
+SET final_html_data = array(
+    'File name' => file_name,
+    'Code' => module_code,
+    ' Module Title' => module_title,
+    'Tutor' => tutor,
+    'Marked date' => 08/04/2016,
+)
+
+
+
+Step 1: Define order of processing
+
+    First, define a function to structure how to get, process and exhibit data.
+
+        FUNCTION display_student_grades()
+            // 1.1 Get all data files found in the 'data' directory that we should read
+            SET data_files: array[string] = get_data_files()
+
+            // For each file, validate and process the data, then return to the user
+            // TODO: write files with the HTML, then display them back to the user
+            FOR file IN data_files
+                get_data_from_file(file)
+                process_file_data
+                // 1. echo the HTML back to the user with errors found
+                build_and_display_html_from_file_data(data)
+            ENDFOR
+
+        ENDFUNCTION
+
+
+Step 2: Get all '.txt' files from the '/data' directory
+
+        // 2.1. Get the files in the directory
+        FUNCTION get_data_files()
+            DEFINE data_files: array[string]
+            SET directory_name: String = 'data'
+            SET directory = get_directory_from_name(directory_name)
+
+            // 2.2. Iterate through all the files in the directory and store the .txt ones
+            FOR file IN directory DO
+                SET file_extension: string = get_file_extension(file)
+                SET count = 0
+                IF file_extension == '.txt'
+                    SET data_files[count] = file
+                    SET count += 1
+                ENDIF
+            ENDFOR
+
+            RETURN data_files
+
+        ENDFUNCTION
+
+
+
+Step 3
+1. for loop that will call a function to perform processing for every
+file encountered.
+    - files must be .txt
+
+FUNCTION get_data_from_file(file)
+    DEFINE file_contents: array[string]
+    OPEN file
+    SET count = 0
+    FOR line IN file
+        SET line_contents = READ line
+        SET file_contents[count] = line_contents
+        SET count += 1
+    CLOSE file
+    RETURN file_contents
+ENDFUNCTION
+
+
+FUNCTION get_file_header(file_data: array)
+    SET header = file_data[0]
+    RETURN header
+ENDFUNCTION
+
+
+FUNCTION get_file_body(file_data: array)
+    SET n: integer = length(file_data)
+    SET body = file_data[1:n]
+    RETURN body
+ENDFUNCTION
+
+
+
+
+
+functionality
+2. Read file
+    We want to read all data, store it in the right format,
+    then close the file not to waste processing resources neither
+    mix the data read step with validation and data write.
+    - Read
+    - Store two arrays: 1 for the header, 1 array of arrays with the grades
+    - Close file
+2. Validate header
+3. Validate grades
+    - Display invalid data?
+4. Calculate statistics
+5. Classify grades
+6. Display to user
+    - Format file into html for display (table?)
+
+?>
