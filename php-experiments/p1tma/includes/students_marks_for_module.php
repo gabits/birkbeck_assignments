@@ -4,6 +4,15 @@ require 'files_processor.php';
 include 'functions.php'
 
 
+MODULE_CODES = array(
+    'PP' => 'Problem Solving for Programming',
+    'P1' => 'Web Programming using PHP',
+    'DT' => 'Introduction to Database Technology',
+);
+
+TERM_TYPES = array('T1', 'T2', 'T3');
+
+
 function clean_trailing_whitespaces_in_data_array($data_array) {
     //
     for ($index = 0; $index < count($array); $index++) {
@@ -65,13 +74,6 @@ function get_module_header($module_header) {
         };
         return $module_code;
     };
-
-    MODULE_CODES = array(
-        'PP' => 'Problem Solving for Programming',
-        'P1' => 'Web Programming using PHP',
-        'DT' => 'Introduction to Database Technology',
-    );
-    TERM_TYPES = array('T1', 'T2', 'T3');
 
     $headers = explode(",", $module_header);
     $headers = clean_trailing_whitespaces_in_data_array($headers);

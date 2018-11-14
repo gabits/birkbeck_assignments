@@ -8,9 +8,9 @@ function get_data_for_html($file_contents) {
     // information that will be exposed on the template.
 
     // The first line from the file contents should be the header information
-    $file_header = clean_trailing_whitespaces_in_data_array($file_contents[0]);
+    $file_header = $file_contents[0];
     // And all other lines should involve student IDs and grades
-    $file_body = clean_trailing_whitespaces_in_data_array($file_contents[1]);
+    $file_body = $file_contents[1];
 
     // First, generate and validate all data. The following logic retrieves 5
     // arrays with data for the HTML, then gather all in one major array
