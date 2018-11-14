@@ -51,6 +51,32 @@
     };
 
 
+    function get_data_for_html($file_contents) {
+        // Given an array $file_contents, process the data to get all
+        // information that will be exposed on the template.
+
+        // The first line from the file contents should be the header information
+        $file_header = $file_contents[0];
+        // And all other lines should involve student IDs and grades
+        $file_body = $file_contents[1];
+
+        // Get arrays with data for the HTML, then gather all in one major array
+        $module_header = validate_module_header($file_header);
+        $raw_student_marks = get_student_marks($file_body);
+        $valid_student_marks = validate_student_marks($raw_student_marks);
+        $statistical_analysis = analyse_student_marks($valid_student_marks);
+        $grade_distribution = calculate_grade_distribution($valid_student_marks);
+
+        $html_data = array(
+            'module_header' => $module_header,
+            'raw_student_marks' => $raw_student_marks,
+            'valid_student_marks' => $valid_student_marks,
+            'statistical_analysis' => $statistical_analysis,
+            'grade_distribution' => $grade_distribution,
+        );
+    };
+
+
     function build_and_display_html_from_file($data_file) {
         // Reads the file, validates the data and places it in the
         // HTML so we can display it to the user.
@@ -113,17 +139,20 @@
         // Marked date: <dd/mm/yyyy>
 
         function validate_date($marked_date) {
+            $error = $marked_date . ":ERROR";
+
             $date = explode("/", $marked_date);
             $date = str_replace("/", "", $date);
 
-            $day = $date[:2];
-            $month = $date[2:4];
-            $year = $date[4:8];
+            $day = (int)$date[:2];
+            $month = (int)$date[2:4];
+            $year = (int)$date[4:8];
 
-            if ($day < 0 or $day > 31 or $month < 0 or $month > 12 or $year < 0) {
-                $marked_date = $marked_date . ":ERROR";
+            if (strlen($date) != 8) {
+                $marked_date = $error;
+            } elseif ($day < 0 or $day > 31 or $month < 0 or $month > 12 or $year < 0) {
+                $marked_date = $error;
             };
-
             return $marked_date;
         }
 
@@ -169,28 +198,31 @@
         $tutor = validate_module_tutot($headers[3]);
         $marked_date = validate_marked_date($headers[4]);
 
-        $module_header = 
+        $validated_module_header = array(
+            'File name' => $file_name,
+            'Module code' => $module_code,
+            'Module title' => $module_title,
+            'Tutor' => $tutor,
+            'Marked date' => $marked_date,
+        );
+        return $validated_module_header;
     };
 
 
-    function validate_module_body($file_body) {
-
+    function get_student_marks($file_body) {
+        $student_marks = array();
+        foreach ($file_body as $line) {
+            $student_info = explode(",", $line);
+            $student_id = $student_info[0];
+            $mark = $student_info[1];
+            $student_marks[$student_id] = $mark;
+        }
+        return $student_marks;
     };
 
 
-    function process_file_data($file_contents) {
-        // Given an array $file_contents, process the data to get all
-        // information that will be exposed on the template.
+    // NOTE: first structure the data, then do validation.
 
-        // The first line from the file contents should be the header information
-        $file_header = $file_contents[0];
-        $module_header = get_module_header($file_header);
-
-        // And all other lines should involve student IDs and grades
-        $file_body = $file_contents[1];
-
-        $valid_data = validate_file_content($file_contents);
-    };
 
     $data_files = get_data_files(DATA_DIRECTORY);
     foreach ($data_files as $data_file) {
