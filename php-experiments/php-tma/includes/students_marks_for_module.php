@@ -1,9 +1,11 @@
 <?php
 
 require 'files_processor.php';
+include 'functions.php'
 
 
-function clean_trailing_whitespaces_in_array_data($data_array) {
+function clean_trailing_whitespaces_in_data_array($data_array) {
+    //
     for ($index = 0; $index < count($array); $index++) {
         $data_array[$index] = trim($data_array[$index]);
     };
@@ -72,7 +74,7 @@ function get_module_header($module_header) {
     TERM_TYPES = array('T1', 'T2', 'T3');
 
     $headers = explode(",", $module_header);
-    $headers = clean_trailing_whitespaces_in_array_data($headers);
+    $headers = clean_trailing_whitespaces_in_data_array($headers);
 
     $file_name = $headers[0];
     $module_code = validate_module_code($headers[1]);
@@ -96,7 +98,11 @@ function get_student_marks($file_body) {
     // the student IDs and the values indicate their marks.
     $student_marks = array();
     foreach ($file_body as $line) {
+        // Split the line by comma and store each value as an element of an array
         $student_info = explode(",", $line);
+        // Clean the data stored in this array to make sure whitespaces will not
+        // affect further calculations
+        $student_info = clean_trailing_whitespaces_in_data_array($student_info);
         $student_id = $student_info[0];
         $mark = $student_info[1];
         $student_marks[$student_id] = $mark;
@@ -107,19 +113,68 @@ function get_student_marks($file_body) {
 
 function validate_student_marks($raw_student_marks) {
     foreach ($raw_student_marks as $student_id => $mark) {
+        // Copy the data to a new array
+        $valid_student_marks = array();
         if (strlen($student_id) != 8 or !ctype_digit($student_id)){
             // If the student ID is not composed of 8 digits or if they are not all numeric
             $raw_student_marks[$student_id] => $mark . "Incorrect student ID: not included";
         } elseif ((int)$mark < 0 or (int)$mark > 100 or !ctype_digit($mark)) {
             // If the mark is not between 0 and 100 or if it is not entirely numeric
             $raw_student_marks[$student_id] => $mark . "Incorrect mark: not included";
-        };
+        } else {
+            // The student id and mark is correct so we can copy it to the array for valid data
+            $valid_student_marks[$student_id] => $mark;
+        }
+    return $valid_student_marks;
     };
 };
 
 
-function analyse_student_marks() {
+function analyse_student_marks($valid_student_marks) {
+    $mean = mmmr($valid_student_marks, $output='mean');
+    $mode = mmmr($valid_student_marks, $output='mode');
+    $range = mmmr($valid_student_marks, $output='range');
 
+    // The amount of valid marks we have stored in the array will indicate
+    // how many students have been included in the mark calculations.
+    $number_of_students = count($valid_student_marks);
+
+    $statistical_analysis = array(
+        'Mean' => $mean,
+        'Mode' => $mode,
+        'Range' => $range,
+        '# of students' => $number_of_students,
+    )
+    return $statistical_analysis
 };
+
+
+function calculate_grade_distribution($valid_student_marks) {
+    $distinction = 0;
+    $merit = 0;
+    $pass = 0;
+    $fail = 0;
+
+    foreach ($valid_student_marks as $mark) {
+        if $mark >= 70 {
+            $distinction++;
+        } elseif $mark >= 60 {
+            $merit++;
+        } elseif $mark >= 40 {
+            $pass++;
+        } else {
+            $fail++;
+        };
+    };
+
+    $grade_distribution = array(
+        'Dist' => $distinction,
+        'Merit' => $merit,
+        'Pass' => $pass,
+        'Fail' => $fail,
+    );
+
+    return $grade_distribution;
+}
 
 ?>

@@ -8,11 +8,12 @@ function get_data_for_html($file_contents) {
     // information that will be exposed on the template.
 
     // The first line from the file contents should be the header information
-    $file_header = $file_contents[0];
+    $file_header = clean_trailing_whitespaces_in_data_array($file_contents[0]);
     // And all other lines should involve student IDs and grades
-    $file_body = $file_contents[1];
+    $file_body = clean_trailing_whitespaces_in_data_array($file_contents[1]);
 
-    // Get arrays with data for the HTML, then gather all in one major array
+    // First, generate and validate all data. The following logic retrieves 5
+    // arrays with data for the HTML, then gather all in one major array
     $module_header = get_module_header($file_header);
     $raw_student_marks = get_student_marks($file_body);
     $valid_student_marks = validate_student_marks($raw_student_marks);
@@ -44,9 +45,7 @@ function build_and_display_html_from_file($data_file) {
     $file_contents = get_file_contents($data_file);
     $html_data = get_data_for_html($file_contents);
 
-    // The amount of valid marks we have stored in the array will indicate
-    // how many students have been included in the mark calculations.
-    $number_of_students = count($valid_student_marks);
+    $number_of_students = $html_data['number_of_students'];
 
     echo "<section>";
 
@@ -62,7 +61,6 @@ function build_and_display_html_from_file($data_file) {
     echo "<h2>Statistical Analysis of module marks...</h2>";
     display_data_from_array($html_data["statistical_analysis"]);
 
-    echo "<p># of students: $number_of_students </p>";
     echo "<h2>Grade Distribution of module marks... </h2>";
     display_data_from_array($html_data["grade_distribution"]);
 
