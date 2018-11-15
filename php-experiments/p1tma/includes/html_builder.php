@@ -1,20 +1,21 @@
 <?php
 
-require 'students_marks_for_module.php';
+require_once 'validators.php';
+require_once 'grades_calculation.php';
 
 
-function get_data_for_html($file_contents) {
+function get_data_for_html($file_name, $file_contents) {
     // Given an array $file_contents, process the data to get all
     // information that will be exposed on the template.
 
     // The first line from the file contents should be the header information
     $file_header = $file_contents[0];
     // And all other lines should involve student IDs and grades
-    $file_body = $file_contents[1];
+    $file_body = array_slice($file_contents, 1, count($file_contents));
 
     // First, generate and validate all data. The following logic retrieves 5
     // arrays with data for the HTML, then gather all in one major array
-    $module_header = get_module_header($file_header);
+    $module_header = get_module_header($file_name, $file_header);
     $raw_student_marks = get_student_marks($file_body);
     $valid_student_marks = validate_student_marks($raw_student_marks);
     $statistical_analysis = analyse_student_marks($valid_student_marks);
@@ -27,25 +28,18 @@ function get_data_for_html($file_contents) {
         'statistical_analysis' => $statistical_analysis,
         'grade_distribution' => $grade_distribution,
     );
+    return $html_data;
 };
 
 
-function build_and_display_html_from_file($data_file) {
+function build_and_display_html_from_file($file_name) {
     // Reads the file, validates the data and places it in the
     // HTML so we can display it to the user.
 
-    function display_data_from_array() {
-        echo "<p>";
-        foreach ($array_data as $key => $value) {
-            echo "<b>$key</b>: $value";
-        };
-        echo "</p>";
-    };
+    $file_path = DATA_DIRECTORY . "/$file_name";
 
-    $file_contents = get_file_contents($data_file);
-    $html_data = get_data_for_html($file_contents);
-
-    $number_of_students = $html_data['number_of_students'];
+    $file_contents = get_file_contents($file_path);
+    $html_data = get_data_for_html($file_name, $file_contents);
 
     echo "<section>";
 

@@ -1,10 +1,18 @@
 <?php
 
-// TODO: array has empty line
+include 'html_builder.php';
+
+
+define('DATA_DIRECTORY', __DIR__ . '/../data/');
+
+
+$data_files = get_data_files(DATA_DIRECTORY);
+foreach ($data_files as $file_name) {
+    build_and_display_html_from_file($file_name);
+};
 
 
 function get_data_files($data_dir) {
-
     // Check if we can get files from the given directory name
     if (is_dir($data_dir)) {
         $data_dir = opendir($data_dir);
