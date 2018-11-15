@@ -41,7 +41,7 @@ function build_and_display_html_from_file($file_name) {
     $file_contents = get_file_contents($file_path);
     $html_data = get_data_for_html($file_name, $file_contents);
 
-    echo "<section>";
+    echo "<article>";
 
     echo "<h2>Module Header Data...</h2>";
     display_data_from_array($html_data["module_header"]);
@@ -58,7 +58,7 @@ function build_and_display_html_from_file($file_name) {
     echo "<h2>Grade Distribution of module marks... </h2>";
     display_data_from_array($html_data["grade_distribution"]);
 
-    echo "</section>";
+    echo "</article>";
 
     echo "<span>---------------------------------------------</span>";
 };

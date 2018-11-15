@@ -21,11 +21,11 @@ function clean_trailing_whitespaces_in_data_array($data_array) {
 
 
 function display_data_from_array($array_data) {
-    echo "<section>";
+    echo "<div>";
     foreach ($array_data as $key => $value) {
         echo "<p><b>$key</b>: $value</p>";
     };
-    echo "</section>";
+    echo "</div>";
 };
 
 

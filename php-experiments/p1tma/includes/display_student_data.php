@@ -7,6 +7,7 @@ define('DATA_DIRECTORY', __DIR__ . '/../data/');
 
 
 $data_files = get_data_files(DATA_DIRECTORY);
+echo "<h1>Students marks, grades and statistics</h1>";
 foreach ($data_files as $file_name) {
     build_and_display_html_from_file($file_name);
 };
