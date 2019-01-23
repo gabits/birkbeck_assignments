@@ -7,7 +7,7 @@ A simple dockerised PHP application using ngnix to load files locally for experi
 
 ## Installation
 1. Clone the repo;
-2. Install the requirements;
+2. Install requirements;
 3. Update the local hosts file (`/etc/hosts`) to point `php-experiments.local` to the local Docker environment, i.e.
 ```
 ##
